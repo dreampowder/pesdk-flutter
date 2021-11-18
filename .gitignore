@@ -1,3 +1,4 @@
+
 # OSX
 .DS_Store
 
@@ -19,6 +20,9 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
+flutter_export_environment.sh
+**/Flutter/Generated.xcconfig
+**/Flutter/Flutter.podspec
 
 # Dart
 .dart_tool/
@@ -26,12 +30,6 @@ project.xcworkspace
 build/
 pubspec.lock
 doc/api/
-
-# fastlane
-fastlane/report.xml
-fastlane/screenshots
-fastlane/Preview.html
-fastlane/test_output
 
 # CocoaPods
 Pods

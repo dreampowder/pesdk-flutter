@@ -7,6 +7,14 @@ import imgly_sdk
 @available(iOS 9.0, *)
 public class FlutterPESDK: FlutterIMGLY, FlutterPlugin, PhotoEditViewControllerDelegate {
 
+    /// A closure to modify a new `PhotoEditViewController` before it is presented on screen.
+    public typealias PESDKWillPresentBlock = (_ photoEditViewController: PhotoEditViewController) -> Void
+
+    // MARK: - Properties
+
+    /// Set this closure to modify a new `PhotoEditViewController` before it is presented on screen.
+    public static var willPresentPhotoEditViewController: PESDKWillPresentBlock?
+
     // MARK: - Flutter Channel
 
     /// Registers for the channel in order to communicate with the
@@ -82,18 +90,15 @@ public class FlutterPESDK: FlutterIMGLY, FlutterPlugin, PhotoEditViewControllerD
 
             guard let finalPhoto = finalPhotoAsset else { return  nil }
 
-            //Triple UI Updates Old Code
-//            if let configuration = configurationData {
-//                editor = PhotoEditViewController(photoAsset: finalPhoto, configuration: configuration, photoEditModel: photoEditModel)
-//            } else {
-//                editor = PhotoEditViewController(photoAsset: finalPhoto, photoEditModel: photoEditModel)
-//            }
-            //Triple UI Updates Old Code End
-            //Added For Triple Apply Button
+            if let configuration = configurationData {
+                //editor = PhotoEditViewController(photoAsset: finalPhoto, configuration: configuration, photoEditModel: photoEditModel)
+            } else {
+                //editor = PhotoEditViewController(photoAsset: finalPhoto, photoEditModel: photoEditModel)
+            }
             editor = PhotoEditViewController(photoAsset: finalPhoto, configuration: self.getTripleConfiguration(configuration: configuration), photoEditModel: photoEditModel)
-            //Added For Triple Apply Button End
             editor.delegate = self
             editor.modalPresentationStyle = .fullScreen
+            FlutterPESDK.willPresentPhotoEditViewController?(editor)
             return editor
         }, utiBlock: { (configurationData) -> CFString in
             return (configurationData?.photoEditViewControllerOptions.outputImageFileFormatUTI ?? kUTTypeJPEG)
@@ -114,7 +119,7 @@ public class FlutterPESDK: FlutterIMGLY, FlutterPlugin, PhotoEditViewControllerD
         }
         return tripleConfig
     }
-    
+
     // MARK: - Licensing
 
     /// Unlocks the license from a url.
